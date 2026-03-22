@@ -1,7 +1,7 @@
 import { SystemMessage } from '@langchain/core/messages'
 import { model } from '../models/models'
 import { AttendanceState } from '../state/attendance.state'
-import { createReactAgent } from '@langchain/langgraph/react'
+import { createReactAgent } from '@langchain/langgraph/prebuilt'
 
 const agent = createReactAgent({
   llm: model,
