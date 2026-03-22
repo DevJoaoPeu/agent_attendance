@@ -13,7 +13,7 @@ app.post('/message', async (request, reply) => {
 
   const data = await graph.invoke({ message, route: null, response: '' })
 
-  return reply.send({ id, response: data.response })
+  return reply.send({ response: data.response })
 })
 
 app.listen({ port: 3000 }, (err, address) => {

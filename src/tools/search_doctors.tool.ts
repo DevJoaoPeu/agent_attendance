@@ -3,13 +3,11 @@ import z from "zod";
 import { searchFaqByEmbedding } from "../embeddings/embeddings";
 
 interface SearchDoctorsToolInterface {
-    doctorName: string
-    specialty?: string
+    query: string
 }
 
 export const searchDoctorsTool = tool(
-    async ({ doctorName, specialty }: SearchDoctorsToolInterface) => {
-        const query = [doctorName, specialty].filter(Boolean).join(' ')
+    async ({ query }: SearchDoctorsToolInterface) => {
         const rows = await searchFaqByEmbedding(query)
 
         if (rows.length === 0) return 'Nenhum médico encontrado.'
@@ -20,10 +18,9 @@ export const searchDoctorsTool = tool(
     },
     {
         name: 'search_doctors',
-        description: 'Usada para listar médicos com ou sem a especialidade.',
+        description: 'Busca médicos pelo nome ou especialidade. Monte a query com o nome do médico e o contexto da pergunta para melhorar a busca semântica.',
         schema: z.object({
-            doctorName: z.string().describe('Nome do médico'),
-            specialty: z.string().optional().describe('Especialidade do médico'),
+            query: z.string().describe('Consulta semântica completa. Inclua o nome do médico e o que se deseja saber. Exemplos: "especialidade da Dra Ana", "Dr Carlos cardiologista", "médicos de ortopedia".'),
         }),
     }
 )
