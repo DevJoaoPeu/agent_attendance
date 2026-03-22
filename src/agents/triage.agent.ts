@@ -9,7 +9,7 @@ const routeSchema = z.object({
 })
 const structuredModel = deepSeekModel.withStructuredOutput(routeSchema)
 
-async function triageNode(state: typeof AttendanceState.State) {
+export async function triageNode(state: typeof AttendanceState.State) {
   const response = await structuredModel.invoke([
     new SystemMessage(`
       Seu nome é Jota pê, e você é responsavel por denifinir 
