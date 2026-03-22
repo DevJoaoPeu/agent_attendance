@@ -1,13 +1,13 @@
 import { Annotation } from '@langchain/langgraph'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
-import { deepSeekModel } from '../models/models'
+import { model } from '../models/models'
 import { z } from 'zod'
 import { AttendanceState } from '../state/attendance.state'
 
 const routeSchema = z.object({
   route: z.enum(['doctors-specialties', 'general', 'financial', 'schedule'])
 })
-const structuredModel = deepSeekModel.withStructuredOutput(routeSchema)
+const structuredModel = model.withStructuredOutput(routeSchema)
 
 export async function triageNode(state: typeof AttendanceState.State) {
   const response = await structuredModel.invoke([

@@ -1,12 +1,12 @@
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
-import { deepSeekModel } from '../models/models'
+import { model } from '../models/models'
 import { AttendanceState } from '../state/attendance.state'
 import { z } from 'zod'
 
 const financialSchema = z.object({
   response: z.string()
 })
-const structuredModel = deepSeekModel.withStructuredOutput(financialSchema)
+const structuredModel = model.withStructuredOutput(financialSchema)
 
 export async function financialNode(state: typeof AttendanceState.State) {
   const result = await structuredModel.invoke([
