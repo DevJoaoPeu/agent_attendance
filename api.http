@@ -1,0 +1,7 @@
+POST http://localhost:3000/message
+content-type: application/json
+
+{
+    "message": "teste",
+    "id": 1
+}
