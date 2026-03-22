@@ -1,0 +1,1 @@
+export type TriageDestinationInterface = 'financial' | 'schedule' | 'doctors_specialties' | 'general'
