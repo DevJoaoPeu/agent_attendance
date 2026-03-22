@@ -1,23 +1,23 @@
-import { HumanMessage, SystemMessage } from '@langchain/core/messages'
+import { SystemMessage } from '@langchain/core/messages'
 import { model } from '../models/models'
 import { AttendanceState } from '../state/attendance.state'
-import { z } from 'zod'
+import { createReactAgent } from '@langchain/langgraph/react'
 
-const scheduleSchema = z.object({
-  response: z.string()
+const agent = createReactAgent({
+  llm: model,
+  tools: [],
+  prompt: new SystemMessage(`
+    Você é especialista em assuntos gerais sobre a clinica...
+
+    Responda apenas para todas a mensagens: "Você entrou no agente geral"
+  `),
 })
-const structuredModel = model.withStructuredOutput(scheduleSchema)
 
 export async function scheduleNode(state: typeof AttendanceState.State) {
-  const result = await structuredModel.invoke([
-    new SystemMessage(`
-        Você é especialista em agendar consultas...
+  const result = await agent.invoke({
+    messages: [{ role: 'user', content: state.message }],
+  })
 
-        Responda apenas para todas a mensagens: "Você entrou no agente de agendamento"
-      `),
-    new HumanMessage(state.message),
-  ])
-  return {
-    response: result.response
-  }
+  const lastMessage = result.messages.at(-1)
+  return { response: String(lastMessage?.content ?? '') }
 }
