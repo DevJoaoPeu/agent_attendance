@@ -1,15 +1,23 @@
-  import { HumanMessage, SystemMessage } from '@langchain/core/messages'
-  import { deepSeekModel } from '../models/models'
+import { HumanMessage, SystemMessage } from '@langchain/core/messages'
+import { deepSeekModel } from '../models/models'
+import { AttendanceState } from '../state/attendance.state'
+import { z } from 'zod'
 
-  export async function scheduleNode(state: { message: string }) {
-    const response = await deepSeekModel.invoke([
-      new SystemMessage(`
+const scheduleSchema = z.object({
+  response: z.string()
+})
+const structuredModel = deepSeekModel.withStructuredOutput(scheduleSchema)
+
+export async function scheduleNode(state: typeof AttendanceState.State) {
+  const result = await structuredModel.invoke([
+    new SystemMessage(`
         Você é especialista em agendar consultas...
 
         Responda apenas para todas a mensagens: "Você entrou no agente de agendamento"
       `),
-      new HumanMessage(state.message),
-    ])
-    return { response: typeof response.content === 'string' ? response.content : ''
-   }
+    new HumanMessage(state.message),
+  ])
+  return {
+    response: result.response
   }
+}

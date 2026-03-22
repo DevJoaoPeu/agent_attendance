@@ -1,22 +1,19 @@
 import { Annotation } from '@langchain/langgraph'
 import { HumanMessage, SystemMessage } from '@langchain/core/messages'
 import { deepSeekModel } from '../models/models'
+import { z } from 'zod'
+import { AttendanceState } from '../state/attendance.state'
 
-const TriageState = Annotation.Root({
-  message: Annotation<string>(),
+const routeSchema = z.object({
+  route: z.enum(['doctors-specialties', 'general', 'financial', 'schedule'])
 })
+const structuredModel = deepSeekModel.withStructuredOutput(routeSchema)
 
-async function triageNode(state: typeof TriageState.State) {
-  const response = await deepSeekModel.invoke([
+async function triageNode(state: typeof AttendanceState.State) {
+  const response = await structuredModel.invoke([
     new SystemMessage(`
-      Seu nome é Jota pê, e você é responsavel por denifinir qual é o agente ideal para tratar da mensagem recebida.
-      Se apresente, seja educado.
-
-      REGRAS DE FORMATAÇÂO
-        - Comprimente o usuário.
-        - Não use negrito
-
-      ${state.message}
+      Seu nome é Jota pê, e você é responsavel por denifinir 
+      qual é o agente ideal para tratar da mensagem recebida.
 
       Agentes disponiveis:
         * doctors-specialties
@@ -31,5 +28,5 @@ async function triageNode(state: typeof TriageState.State) {
     new HumanMessage(state.message),
   ])
 
-  return typeof response.content === 'string' ? response.content : ''
+  return { route: response.route }
 }
