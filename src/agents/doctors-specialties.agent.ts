@@ -13,7 +13,11 @@ export async function doctorsSpeacialtiesNode(state: typeof AttendanceState.Stat
     new SystemMessage(`
         Você é especialista em buscar dados de medicos e especialidades...
 
-        Responda apenas para todas a mensagens: "Você entrou no agente medicos e especialidades"
+        FERRAMENTAS PARA BUSCA
+          - search_doctors
+          * use para buscar medicos pela especialidade, ou apenas pelo nome
+          - search_specialties
+          * use para buscar especialidades
       `),
     new HumanMessage(state.message),
   ])
