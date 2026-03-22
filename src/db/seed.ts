@@ -1,9 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import readline from 'readline'
-import 'dotenv/config'
-import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai'
-import { db } from './client'
+import { embeddings, db } from './embeddings'
 
 const MOCK_DATA_DIR = path.resolve('mock_data')
 

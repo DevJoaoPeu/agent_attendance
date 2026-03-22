@@ -1,15 +1,24 @@
-import { tool } from "langchain";
+import { tool } from "langchain/tools";
 import z from "zod";
+import { searchFaqByEmbedding } from "../db/embeddings";
 
 export const searchDoctorsTool = tool(
-    async ({ doctorName, specialty }) => {}, {
+    async ({ doctorName, specialty }) => {
+        const query = [doctorName, specialty].filter(Boolean).join(' ')
+        const rows = await searchFaqByEmbedding(query)
+
+        if (rows.length === 0) return 'Nenhum médico encontrado.'
+
+        return rows
+            .map((r) => `[${r.category}] P: ${r.question}\nR: ${r.answer}`)
+            .join('\n\n')
+    },
+    {
         name: 'search_doctors',
-        description: `
-            Usada para listas medicos com ou sem a especialidade.
-        `
+        description: 'Usada para listar médicos com ou sem a especialidade.',
         schema: z.object({
-            doctorName: z.string().describe('Nome do medico'),
-            specialty: z.string().optional().describe('Especialidade do medico')
-        })
+            doctorName: z.string().describe('Nome do médico'),
+            specialty: z.string().optional().describe('Especialidade do médico'),
+        }),
     }
 )
