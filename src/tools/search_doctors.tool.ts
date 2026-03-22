@@ -1,9 +1,14 @@
-import { tool } from "langchain/tools";
+import { tool } from "@langchain/core/tools";
 import z from "zod";
-import { searchFaqByEmbedding } from "../db/embeddings";
+import { searchFaqByEmbedding } from "../embeddings/embeddings";
+
+interface SearchDoctorsToolInterface {
+    doctorName: string
+    specialty?: string
+}
 
 export const searchDoctorsTool = tool(
-    async ({ doctorName, specialty }) => {
+    async ({ doctorName, specialty }: SearchDoctorsToolInterface) => {
         const query = [doctorName, specialty].filter(Boolean).join(' ')
         const rows = await searchFaqByEmbedding(query)
 

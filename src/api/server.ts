@@ -11,7 +11,7 @@ interface BodyMessagesInterface {
 app.post('/message', async (request, reply) => {
   const { message, id } = request.body as BodyMessagesInterface
 
-  const data = await graph.invoke({ message, route: '', response: '' })
+  const data = await graph.invoke({ message, route: null, response: '' })
 
   return reply.send({ id, response: data.response })
 })

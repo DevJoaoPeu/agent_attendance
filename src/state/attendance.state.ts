@@ -4,6 +4,6 @@
 
  export const AttendanceState = Annotation.Root({
    message: Annotation<string>(),
-   route: Annotation<TriageDestinationInterface>(),
+   route: Annotation<TriageDestinationInterface | null>(),
    response: Annotation<string>(),
  })

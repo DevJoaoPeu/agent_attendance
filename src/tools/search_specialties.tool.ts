@@ -1,9 +1,13 @@
-import { tool } from "langchain/tools";
+import { tool } from "@langchain/core/tools";
 import z from "zod";
-import { searchFaqByEmbedding } from "../db/embeddings";
+import { searchFaqByEmbedding } from "../embeddings/embeddings";
+
+interface SearchDoctorsToolInterface {
+    specialty: string
+}
 
 export const searchSpecialtiesTool = tool(
-    async ({ specialty }) => {
+    async ({ specialty }: SearchDoctorsToolInterface) => {
         const rows = await searchFaqByEmbedding(specialty)
 
         if (rows.length === 0) return 'Nenhuma especialidade encontrada.'

@@ -1,7 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import readline from 'readline'
-import { embeddings, db } from './embeddings'
+import { embeddingsModel } from '../embeddings/embedding.model'
+import { db } from './client'
 
 const MOCK_DATA_DIR = path.resolve('mock_data')
 
@@ -11,11 +12,6 @@ interface FaqRow {
   answer: string
   category: string
 }
-
-const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: 'gemini-embedding-001',
-  apiKey: process.env.GEMINI_API_KEY,
-})
 
 async function readJsonl(filePath: string): Promise<FaqRow[]> {
   const rl = readline.createInterface({
@@ -51,7 +47,7 @@ async function seed() {
 
     for (const row of rows) {
       const text = `${row.question} ${row.answer}`
-      const vector = await embeddings.embedQuery(text)
+      const vector = await embeddingsModel.embedQuery(text)
 
       await db.query(
         `INSERT INTO faq (id, question, answer, category)

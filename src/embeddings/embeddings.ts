@@ -1,11 +1,7 @@
 import 'dotenv/config'
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai'
-import { db } from './client'
-
-export const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: 'gemini-embedding-001',
-  apiKey: process.env.GEMINI_API_KEY,
-})
+import { embeddingsModel } from './embedding.model'
+import { db } from '../db/client'
 
 export interface FaqResult {
   id: string
@@ -16,7 +12,7 @@ export interface FaqResult {
 }
 
 export async function searchFaqByEmbedding(query: string, limit = 3): Promise<FaqResult[]> {
-  const vector = await embeddings.embedQuery(query)
+  const vector = await embeddingsModel.embedQuery(query)
 
   const result = await db.query(
     `SELECT f.id, f.question, f.answer, f.category,

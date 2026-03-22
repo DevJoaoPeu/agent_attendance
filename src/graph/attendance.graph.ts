@@ -9,7 +9,7 @@ import { TriageDestinationInterface } from "../agents/interfaces/agents.interfac
 
 
 function routerDecision(state: typeof AttendanceState.State): TriageDestinationInterface {
-    return state.route
+    return state.route ?? 'general'
 }
 
 export const graph = new StateGraph(AttendanceState)
