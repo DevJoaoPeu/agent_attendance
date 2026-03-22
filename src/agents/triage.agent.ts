@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { AttendanceState } from '../state/attendance.state'
 
 const routeSchema = z.object({
-  route: z.enum(['doctors-specialties', 'general', 'financial', 'schedule'])
+  route: z.enum(['doctors_specialties', 'general', 'financial', 'schedule'])
 })
 const structuredModel = model.withStructuredOutput(routeSchema)
 
@@ -16,7 +16,7 @@ export async function triageNode(state: typeof AttendanceState.State) {
       qual é o agente ideal para tratar da mensagem recebida.
 
       Agentes disponiveis:
-        * doctors-specialties
+        * doctors_specialties
           - Responsavel por buscar dados de medicos e especialidades
         * general
           - Duvidas sobre a clinica, endereço, horarios e etc
