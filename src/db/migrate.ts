@@ -17,30 +17,12 @@ async function migrate() {
       embedding vector(3072) NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS patients (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      created_at timestamp
-    );
-
-    CREATE TABLE IF NOT EXISTS professionals (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      created_at timestamp
-    );
-
-    CREATE TABLE IF NOT EXISTS specialties (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      created_at timestamp
-    );
-
     CREATE TABLE IF NOT EXISTS schedule (
       id SERIAL PRIMARY KEY,
       data timestamp NOT NULL,
-      professional_id int NOT NULL,
-      specialty_id int NOT NULL,
-      patient_id int NOT NULL,
+      professional_name VARCHAR(100) NOT NULL,
+      specialty_name VARCHAR(100) NOT NULL,
+      patient_name VARCHAR(100) NOT NULL,
       date_appointment timestamp NOT NULL,
       created_at timestamp NOT NULL,
       updated_at timestamp

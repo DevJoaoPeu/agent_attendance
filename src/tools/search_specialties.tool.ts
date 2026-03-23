@@ -2,25 +2,22 @@ import { tool } from "@langchain/core/tools";
 import z from "zod";
 import { searchFaqByEmbedding } from "../embeddings/embeddings";
 
-interface SearchDoctorsToolInterface {
-    specialty: string
-}
-
 export const searchSpecialtiesTool = tool(
-    async ({ specialty }: SearchDoctorsToolInterface) => {
-        const rows = await searchFaqByEmbedding(specialty)
+    async ({ query }) => {
+        const results = await searchFaqByEmbedding(query, 5)
+        const specialties = results.filter((r) => r.category === 'specialty')
 
-        if (rows.length === 0) return 'Nenhuma especialidade encontrada.'
+        if (specialties.length === 0) return 'Nenhuma especialidade encontrada.'
 
-        return rows
-            .map((r) => `[${r.category}] P: ${r.question}\nR: ${r.answer}`)
-            .join('\n\n')
+        return specialties
+            .map((r) => `Especialidade: ${r.question.replace('Especialidade: ', '')} | ${r.answer}`)
+            .join('\n')
     },
     {
         name: 'search_specialties',
-        description: 'Usada para listar especialidades médicas disponíveis.',
+        description: 'Busca especialidades médicas usando busca semântica. Use a frase ou intenção do usuário como query.',
         schema: z.object({
-            specialty: z.string().describe('Especialidade buscada'),
+            query: z.string().describe('Descrição da especialidade desejada. Exemplo: "problema no joelho", "pele", "coração".'),
         }),
     }
 )
