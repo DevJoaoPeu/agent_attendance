@@ -17,8 +17,7 @@
     "build": "tsc",
     "start": "tsx src/api/server.ts",
     "migrate": "tsx src/db/migrate.ts",
-    "seed": "tsx src/db/seed.ts",
-    "mock": "tsx src/db/mock.ts"
+    "seed": "tsx src/db/seed.ts"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
